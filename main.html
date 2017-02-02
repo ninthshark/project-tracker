@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>test</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div>
+		<div class="front-sheet">
+			<div class="header">
+				<div><a href="#" class="logo">Personal Project</a></div>
+			</div>
+
+			<div class="board-content">
+				<div class="board-header">
+					<h2>Your Projects Board</h2>
+				</div>
+				<ul id="project-list">
+					<li class="box" id="create-new-project">
+						<a class="card-create-new-project" href="#">Create new project...</a>
+					</li>
+					<li class="box" id="sample-project">
+						<a class="card-open-project" href="#">The fun start here!!!</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div id="popup-card">
+				
+				<div class="popup-content">
+					<div>Create Project</div>
+						<span class="close-popup">&times;</span>
+						<div>
+							<form id="form-submit">
+								<label>Title</label>
+								<input type="text" name="name" class="project-name" placeholder='Like "Try vegan for 30 days"'>
+								<label>Target Score</label>
+								<input type="number" name="score" class="target-score">
+								<input type="button" value="Create" class="submit-project">
+							</form>
+						</div>
+				</div>
+			</div>				
+	</div>
+	
+	<script type="text/javascript" src="project_card.js"></script>
+</body>
+</html>
