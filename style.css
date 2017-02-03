@@ -103,3 +103,11 @@ ul {
 form, label, input {
 	display: block;
 }
+
+/*******project content*********/
+.project-content {
+	width: 80%;
+	margin: 0 auto;
+	position: relative;
+	background-color: #d8f2ff;
+}
