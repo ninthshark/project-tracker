@@ -8,7 +8,7 @@
 	<div>
 		<div class="front-sheet">
 			<div class="header">
-				<div><a href="#" class="logo">Personal Project</a></div>
+				<div><a href="main.html" class="logo">Personal Project</a></div>
 			</div>
 
 			<div class="board-content">
@@ -17,11 +17,11 @@
 				</div>
 				<ul id="project-list">
 					<li class="box" id="create-new-project">
-						<a class="card-create-new-project" href="#">Create new project...</a>
+						<a class="card-create-new-project" id="card" href="#">Create new project...</a>
 					</li>
-					<li class="box" id="sample-project">
+					<!-- <li class="box" id="sample-project">
 						<a class="card-open-project" href="#">The fun start here!!!</a>
-					</li>
+					</li> -->
 				</ul>
 			</div>
 		</div>
@@ -47,56 +47,48 @@
 		********************This section is project content ***********************************
 		*************************************************************************************-->
 		<div class="project-content">
+
 			<div class="top">
-      <div class="project_title">
-        <h1>Website for charity</h1>
-      </div>
-      <div class="score_section">
-        <div class="target_score">
-          Target Score : <span class="target_score_num">100</span>
-        </div>
-        <div class="current_score">
-          Current Score : <span class="current_score_num">34</span>
-        </div>
-      </div>
-    </div>
-    <div class="bottom">
-      <div class="task_header">
-        <h2>Completed Tasks</h2>
-      </div>
-      <div class="task_list">
-        <div class="task_item">
+	     		<div class="project-title">
 
+	        		Website for charity
+	      		</div>
+	      		<div id="project-id">project-id</div>
+	      		<div class="score-section">
+	        		<div class="target-score">
+	          			Target Score : <span class="target-score-num">100</span>
+	        		</div>
+	        		<div class="current-score">
+	          			Current Score : <span class="current_score_num">34</span>
+	        		</div>
+	      		</div>
+	    	</div>
 
-          <div class="task_description">Outline and planing for website, created simple html
-            <div class="date_and_time">Friday 27 January 2017, 21.05
-            </div>
-          </div>
-          <div class="task_score">5</div>
-        </div>
-      </div>
+	    	<div class="bottom">
+	      		<div class="task_header">
+	        		<h2>Completed Tasks</h2>
+	      		</div>
+	      		<div class="task_list">
+	        		<div class="task_item">
+	          			<div class="task_description">Outline and planing for website, created simple html
+	            			<div class="date_and_time">Friday 27 January 2017, 21.05</div>
+	          			</div>
+	          		<div class="task_score">5</div>
+	        		</div>
+	      		</div>
 
+	      		<div class="task_editor">
+	        		<div class="editor_header">
+	          			<h2>Describe your completed tasks and give yourself score.</h2>
+	        		</div>
+	        		<textarea name="task_text" rows="8" cols="40" class="task_text"></textarea>
+	        		<div class="score_submit">
+	          			<input type="number" class="score_box" min="1" max="5" placeholder="Score" value="1">
 
-      <!-- <div class="task_item">
-        <div class="task_description">
-          Start outline and planing for website, created simple html, java script and css.
-          Start outline and planing for website, created simple html, java script and css.
-          Start outline and planing for website, created simple html, java script and css.
-        </div>
-        <div class="task_score">5</div>
-      </div> -->
-      <div class="task_editor">
-        <div class="editor_header">
-          <h2>Describe your completed tasks and give yourself score.</h2>
-        </div>
-        <textarea name="task_text" rows="8" cols="40" class="task_text"></textarea>
-        <div class="score_submit">
-          <input type="number" class="score_box" min="1" max="5" placeholder="Score" value="1">
-
-          <button type="button" class="myButton">I am ready!</button>
-        </div>
-      </div>
-    </div>
+	          			<button type="button" class="myButton">I am ready!</button>
+	        		</div>
+	      		</div>
+	    	</div>
 		</div>				
 	</div>
 	

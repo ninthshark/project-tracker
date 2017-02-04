@@ -110,4 +110,5 @@ form, label, input {
 	margin: 0 auto;
 	position: relative;
 	background-color: #d8f2ff;
+	display: none;
 }
