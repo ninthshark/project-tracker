@@ -5,10 +5,15 @@ var cardController = (function() {
 	this.name = name;
 	this.target = target;
 	// this.projectTask = [];
+	this.current_score = 0;
 	};
 
 	CreateProject.prototype.addProjectTask = function() {
 		this.projectTask = [];
+	};
+
+	CreateProject.prototype.addCurrentScore = function() {
+		this.currentScore = 0;
 	};
 
 	var ProjectTask = function(task_id, task, score) {
@@ -30,7 +35,7 @@ var cardController = (function() {
 			sum += element.score;
 		});
 		projectData.currentScore = sum;
-	}
+	};
 
 	return {
 
@@ -46,6 +51,8 @@ var cardController = (function() {
 
 			project = new CreateProject(ID, name, targetScore);
 			project.addProjectTask();
+			
+			// project.addCurrentScore();
 			allData.push(project);
 
 			return project;
@@ -80,8 +87,13 @@ var cardController = (function() {
 			allData[projectIndex].projectTask.push(task);			
 		},
 
+
 		getProject: function(projectID) {
-			
+			var projectPos = allData.map(function(element) {
+				return element.project_id;
+			}).indexOf(projectID);
+
+			return allData[projectPos];
 		},
 
 		getProjectScore: function() {
@@ -90,9 +102,9 @@ var cardController = (function() {
 			};
 		},
 
-		// addTaskToProject: function(projectID, task) {
-		// 	allData[0].projectTask.push(task);
-		// },
+		resetProjectScore: function() {
+			projectData.taskDetail = [];
+		},
 
 		testProject: function() {
 			console.log(allData);
@@ -144,7 +156,7 @@ var UIController = (function() {
 		getProjectInput: function() {
 			return {
 				name: document.querySelector(DOMstrings.projectName).value,
-				targetScore: document.querySelector(DOMstrings.projectScore).value
+				targetScore: parseFloat(document.querySelector(DOMstrings.projectScore).value)
 			};
 		},
 		// Add Project to the list
@@ -159,13 +171,14 @@ var UIController = (function() {
 		},
 
 		addProjectTaskSection: function(obj) {
-			var name, target, projectID;
-			name = DOMstrings.projectTitle;
-			target = DOMstrings.targetScore;
-			projectID = DOMstrings.projectID;
-			document.querySelector(name).textContent = obj.name;
-			document.querySelector(target).textContent = obj.target;
-			document.querySelector(projectID).textContent = obj.project_id;
+			// var name, target, projectID;
+			// name = DOMstrings.projectTitle;
+			// target = DOMstrings.targetScore;
+			// projectID = DOMstrings.projectID;
+			document.querySelector(DOMstrings.projectTitle).textContent = obj.name;
+			document.querySelector(DOMstrings.targetScore).textContent = obj.target;
+			document.querySelector(DOMstrings.projectID).textContent = obj.project_id;
+			document.querySelector(DOMstrings.currentScore).textContent = 0;
 		},
 
 		//********************* Project task detail******************************************
@@ -189,6 +202,7 @@ var UIController = (function() {
      	},
 
      	displayCurrentScore: function(obj) {
+     		
      		document.querySelector(DOMstrings.currentScore).textContent = obj.currentScore;
      	},
 
@@ -210,6 +224,14 @@ var UIController = (function() {
 			fieldsArr.forEach(function(element, index) {
 				element.textContent = "";
 			});
+		},
+
+		displayProject: function(obj) {
+			document.querySelector(DOMstrings.projectTitle).textContent = obj.name;
+			document.querySelector(DOMstrings.projectID).textContent = obj.project_id;
+			document.querySelector('.target-score-num').textContent = obj.target;
+			document.querySelector('.current_score_num').textContent = obj.current_score;
+
 		},
 
 
@@ -244,7 +266,11 @@ var appController = (function(cardCtrl, UICtrl) {
 			}
 			else {
 				var projectID = name.split('-')[1]
+				var ID = parseFloat(projectID);
 				console.log(projectID);
+				console.log(cardCtrl.getProject(ID));
+				var project = cardCtrl.getProject(ID);
+				UICtrl.displayProject(project);
 				
 			}
 
@@ -297,11 +323,12 @@ var appController = (function(cardCtrl, UICtrl) {
 		var projectInput = UICtrl.getProjectInput();
 		var newProject = cardCtrl.addProject(projectInput.name, projectInput.targetScore);
 		UICtrl.addProjectToProjectList(newProject);
-		
+	
 		document.querySelector(DOM.projectContent).style.display = "block";
 		UICtrl.addProjectTaskSection(newProject);
 		UICtrl.clearProjectTask();
-		
+
+		cardCtrl.resetProjectScore();
 
 	};
 
@@ -321,10 +348,17 @@ var appController = (function(cardCtrl, UICtrl) {
 	//**************** Project task ********************************
 	var updateScore = function() {
 
-	    var score = cardCtrl.getProjectScore()
-	    console.log(score);
+	    var score = cardCtrl.getProjectScore();
+	    // var score = cardCtrl.getProject(projectID)
+	    console.log(score.currentScore);
+
 	    UICtrl.displayCurrentScore(score);
   	};
+
+  	var updateProject = function(projectID) {
+  		var project = cardCtrl.getProject(projectID);
+  		project.current_score = cardCtrl.getProjectScore().currentScore;
+  	}
 
   	var controlAddTask = function() {
 	    var input, newTask, projectID;
@@ -332,10 +366,11 @@ var appController = (function(cardCtrl, UICtrl) {
 	    console.log(input);
 	    projectID = getProjectID();
 
-	    if (input.taskl !== "" && !isNaN(input.score)) {
+	    if (input.task !== "" && !isNaN(input.score)) {
 	      	newTask = cardCtrl.addTask(input.task,input.score);
 	      	UICtrl.addTaskItem(newTask);
 	      	updateScore();
+	      	updateProject(projectID);
 	      	UICtrl.clearField();
 
 	      	cardCtrl.addTaskToProject(projectID, newTask);
