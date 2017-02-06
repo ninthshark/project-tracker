@@ -12,9 +12,9 @@ var cardController = (function() {
 		this.projectTask = [];
 	};
 
-	CreateProject.prototype.addCurrentScore = function() {
-		this.currentScore = 0;
-	};
+	// CreateProject.prototype.addCurrentScore = function() {
+	// 	this.currentScore = 0;
+	// };
 
 	var ProjectTask = function(task_id, task, score) {
 		this.task_id = task_id;
@@ -28,6 +28,23 @@ var cardController = (function() {
 	};
 
 	var allData = [];
+	/* 
+	allData = [
+		{
+			project_id: 1,
+		 	name: "Try Vegan for 30 days",
+		 	target: 30,
+		 	current_score: 6,
+		 	projectTask: [
+				{
+					task_id: 0,
+					task: "Get rid of meat",
+					score: 3
+				}
+		 	]
+		}
+	]
+	*/
 
 	var calculateScore = function() {
 		var sum = 0;
@@ -74,9 +91,9 @@ var cardController = (function() {
 
 		},
 
-		getLastProjectID: function() {
-			return allData[allData.length - 1].project_id;
-		},
+		// getLastProjectID: function() {
+		// 	return allData[allData.length - 1].project_id;
+		// },
 
 
 		addTaskToProject: function(projectID,task) {
@@ -231,6 +248,11 @@ var UIController = (function() {
 			document.querySelector(DOMstrings.projectID).textContent = obj.project_id;
 			document.querySelector('.target-score-num').textContent = obj.target;
 			document.querySelector('.current_score_num').textContent = obj.current_score;
+
+			for (var i=0; i < obj.projectTask.length; i++) {
+				document.querySelectorAll('.task_description')[i].textContent = obj.projectTask.task[i];
+				document.querySelectorAll('.task_score')[i].textContent = obj.projectTask.score[i];
+			}
 
 		},
 
