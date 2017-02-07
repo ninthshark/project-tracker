@@ -4,12 +4,16 @@ var cardController = (function() {
 	this.project_id = project_id;
 	this.name = name;
 	this.target = target;
-	// this.projectTask = [];
+	this.projectTask = [];
 	this.current_score = 0;
 	};
 
-	CreateProject.prototype.addProjectTask = function() {
-		this.projectTask = [];
+	CreateProject.prototype.addProjectTask = function(task_id, task, score) {
+		return {
+			task_id: task_id,
+			task: task,
+			score: score
+		}
 	};
 
 	var ProjectTask = function(task_id, task, score) {
@@ -36,21 +40,70 @@ var cardController = (function() {
 					task_id: 0,
 					task: "Get rid of meat",
 					score: 3
+				},
+				{
+					task_id: 1,
+					task: "Buy veg",
+					score: 3
+				}
+		 	]
+		},
+		{	project_id: 2,
+		 	name: "Food Recipe",
+		 	target: 7,
+		 	current_score: 2,
+		 	projectTask: [
+				{
+					task_id: 0,
+					task: "Quinoa",
+					score: 1
+				},
+				{
+					task_id: 1,
+					task: "Brocoli",
+					score: 1
 				}
 		 	]
 		}
 	]
 	*/
 
-	var calculateScore = function() {
+	// var calculateScore = function() {
+	// 	var sum = 0;
+	// 	projectData.taskDetail.forEach( function(element) {
+	// 		sum += element.score;
+	// 	});
+	// 	projectData.currentScore = sum;
+	// };
+
+	// var calculateScore = function(projectID) {
+	// 	var sum = 0;
+	// 	var pos = getProjectPos(projectID);
+	// 	allData[pos].projectTask.forEach(function(element){
+	// 		sum += element.score;
+	// 	});
+	// 	allData[pos].current_score = sum;
+	// };
+
+	var calculateScore = function(projectID) {
 		var sum = 0;
-		projectData.taskDetail.forEach( function(element) {
-			sum += element.score;
-		});
-		projectData.currentScore = sum;
+		var pos = getProjectPos(projectID);
+		for (var i=0, len=allData[pos].projectTask.length; i<len; i++) {
+			sum += allData[pos].projectTask[i].score;
+		}
+		allData[pos].current_score = sum;
 	};
 
+	var getProjectPos = function(projectID) {
+		var projectPos = allData.map(function(element) {
+				return element.project_id;
+			}).indexOf(projectID);
+		return projectPos;
+	}
+
 	return {
+
+		// creat a new project to project board
 
 		addProject: function(name,targetScore) {
 		
@@ -65,24 +118,27 @@ var cardController = (function() {
 			project = new CreateProject(ID, name, targetScore);
 			project.addProjectTask();
 			
-			// project.addCurrentScore();
 			allData.push(project);
 
 			return project;
 		},
 
-		addTask: function(task, score) {
-			var ID, newProjectTask;
+		addTask: function(projectID, task, score) {
+			var taskID, newProjectTask;
 
-			if (projectData.taskDetail.length > 0) {
-				ID = projectData.taskDetail[projectData.taskDetail.length - 1].task_id + 1;
+			var projectPos = getProjectPos(projectID);
+
+			if (allData[projectPos].projectTask.length > 0) {
+				taskID = allData[projectPos].projectTask[allData[projectPos].projectTask.length - 1].task_id + 1;
 			} else {
-				ID = 0;
+				taskID = 0;
 			}
-
-			newProjectTask = new ProjectTask(ID, task, score);
-			projectData.taskDetail.push(newProjectTask);
-			calculateScore();
+			// newProjectTask = allData.addProjectTask(ID, task, score);
+			
+			newProjectTask = new ProjectTask(taskID, task, score);
+			allData[projectPos].projectTask.push(newProjectTask);
+			// projectData.taskDetail.push(newProjectTask);
+			calculateScore(projectID);
 			return newProjectTask;
 
 		},
@@ -92,13 +148,13 @@ var cardController = (function() {
 		// },
 
 
-		addTaskToProject: function(projectID,task) {
-			var projectIndex = allData.map(function(element) {
-				return element.project_id;
-			}).indexOf(projectID);
+		// addTaskToProject: function(projectID,task) {
+		// 	var projectIndex = allData.map(function(element) {
+		// 		return element.project_id;
+		// 	}).indexOf(projectID);
 
-			allData[projectIndex].projectTask.push(task);			
-		},
+		// 	allData[projectIndex].projectTask.push(task);			
+		// },
 
 
 		getProject: function(projectID) {
@@ -216,7 +272,7 @@ var UIController = (function() {
 
      	displayCurrentScore: function(obj) {
      		
-     		document.querySelector(DOMstrings.currentScore).textContent = obj.currentScore;
+     		document.querySelector('.current_score_num').textContent = obj.current_score;
      	},
 
      	clearField: function() {
@@ -246,8 +302,8 @@ var UIController = (function() {
 			document.querySelector('.current_score_num').textContent = obj.current_score;
 
 			for (var i=0; i < obj.projectTask.length; i++) {
-				document.querySelectorAll('.task_description')[i].textContent = obj.projectTask.task[i];
-				document.querySelectorAll('.task_score')[i].textContent = obj.projectTask.score[i];
+				document.querySelectorAll('.task_description')[i].textContent = obj.projectTask[i].task;
+				document.querySelectorAll('.task_score')[i].textContent = obj.projectTask[i].score;
 			}
 
 		},
@@ -288,6 +344,7 @@ var appController = (function(cardCtrl, UICtrl) {
 				console.log(projectID);
 				console.log(cardCtrl.getProject(ID));
 				var project = cardCtrl.getProject(ID);
+				UICtrl.clearProjectTask();
 				UICtrl.displayProject(project);
 				
 			}
@@ -337,6 +394,8 @@ var appController = (function(cardCtrl, UICtrl) {
 		}
 	};
 
+	// Get input from project create page
+
 	var addNewProject = function() {
 		var projectInput = UICtrl.getProjectInput();
 		var newProject = cardCtrl.addProject(projectInput.name, projectInput.targetScore);
@@ -351,10 +410,10 @@ var appController = (function(cardCtrl, UICtrl) {
 	};
 
 	//find the last project id
-	var thisProjectID = function() {
-		var li_element = document.getElementsByTagName('li');
-		return (li_element[li_element.length - 1].id);
-	}
+	// var thisProjectID = function() {
+	// 	var li_element = document.getElementsByTagName('li');
+	// 	return (li_element[li_element.length - 1].id);
+	// }
 
 	// Get project ID
 
@@ -364,19 +423,20 @@ var appController = (function(cardCtrl, UICtrl) {
 	}
 
 	//**************** Project task ********************************
-	var updateScore = function() {
-
-	    var score = cardCtrl.getProjectScore();
+	var updateScore = function(projectID) {
+		
+	    var project = cardCtrl.getProject(projectID);
+	    // var score = project.current_score;
 	    // var score = cardCtrl.getProject(projectID)
-	    console.log(score.currentScore);
+	    // console.log(project);
 
-	    UICtrl.displayCurrentScore(score);
+	    UICtrl.displayCurrentScore(project);
   	};
 
-  	var updateProject = function(projectID) {
-  		var project = cardCtrl.getProject(projectID);
-  		project.current_score = cardCtrl.getProjectScore().currentScore;
-  	}
+  	// var updateProject = function(projectID) {
+  	// 	var project = cardCtrl.getProject(projectID);
+  	// 	project.current_score = cardCtrl.getProjectScore().currentScore;
+  	// }
 
   	var controlAddTask = function() {
 	    var input, newTask, projectID;
@@ -385,13 +445,13 @@ var appController = (function(cardCtrl, UICtrl) {
 	    projectID = getProjectID();
 
 	    if (input.task !== "" && !isNaN(input.score)) {
-	      	newTask = cardCtrl.addTask(input.task,input.score);
+	      	newTask = cardCtrl.addTask(projectID,input.task,input.score);
 	      	UICtrl.addTaskItem(newTask);
-	      	updateScore();
-	      	updateProject(projectID);
+	      	updateScore(projectID);
+	      	// updateProject(projectID);
 	      	UICtrl.clearField();
 
-	      	cardCtrl.addTaskToProject(projectID, newTask);
+	      	// cardCtrl.addTaskToProject(projectID, newTask);
 	     // }
 	 	}
 
