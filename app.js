@@ -22,10 +22,10 @@ var cardController = (function() {
 		this.score = score;
 	};
 
-	var projectData = {
-		taskDetail : [],
-		currentScore : 0
-	};
+	// var projectData = {
+	// 	taskDetail : [],
+	// 	currentScore : 0
+	// };
 
 	var allData = [];
 	/* 
@@ -68,22 +68,6 @@ var cardController = (function() {
 	]
 	*/
 
-	// var calculateScore = function() {
-	// 	var sum = 0;
-	// 	projectData.taskDetail.forEach( function(element) {
-	// 		sum += element.score;
-	// 	});
-	// 	projectData.currentScore = sum;
-	// };
-
-	// var calculateScore = function(projectID) {
-	// 	var sum = 0;
-	// 	var pos = getProjectPos(projectID);
-	// 	allData[pos].projectTask.forEach(function(element){
-	// 		sum += element.score;
-	// 	});
-	// 	allData[pos].current_score = sum;
-	// };
 
 	var calculateScore = function(projectID) {
 		var sum = 0;
@@ -133,28 +117,13 @@ var cardController = (function() {
 			} else {
 				taskID = 0;
 			}
-			// newProjectTask = allData.addProjectTask(ID, task, score);
 			
 			newProjectTask = new ProjectTask(taskID, task, score);
 			allData[projectPos].projectTask.push(newProjectTask);
-			// projectData.taskDetail.push(newProjectTask);
 			calculateScore(projectID);
 			return newProjectTask;
 
 		},
-
-		// getLastProjectID: function() {
-		// 	return allData[allData.length - 1].project_id;
-		// },
-
-
-		// addTaskToProject: function(projectID,task) {
-		// 	var projectIndex = allData.map(function(element) {
-		// 		return element.project_id;
-		// 	}).indexOf(projectID);
-
-		// 	allData[projectIndex].projectTask.push(task);			
-		// },
 
 
 		getProject: function(projectID) {
@@ -165,22 +134,8 @@ var cardController = (function() {
 			return allData[projectPos];
 		},
 
-		getProjectScore: function() {
-			return {
-				currentScore: projectData.currentScore
-			};
-		},
-
-		resetProjectScore: function() {
-			projectData.taskDetail = [];
-		},
-
 		testProject: function() {
 			console.log(allData);
-		},
-
-		testTask: function() {
-			console.log(projectData);
 		}
 	}
 
@@ -240,10 +195,7 @@ var UIController = (function() {
 		},
 
 		addProjectTaskSection: function(obj) {
-			// var name, target, projectID;
-			// name = DOMstrings.projectTitle;
-			// target = DOMstrings.targetScore;
-			// projectID = DOMstrings.projectID;
+
 			document.querySelector(DOMstrings.projectTitle).textContent = obj.name;
 			document.querySelector(DOMstrings.targetScore).textContent = obj.target;
 			document.querySelector(DOMstrings.projectID).textContent = obj.project_id;
@@ -341,17 +293,11 @@ var appController = (function(cardCtrl, UICtrl) {
 			else {
 				var projectID = name.split('-')[1]
 				var ID = parseFloat(projectID);
-				console.log(projectID);
-				console.log(cardCtrl.getProject(ID));
 				var project = cardCtrl.getProject(ID);
 				UICtrl.clearProjectTask();
 				UICtrl.displayProject(project);
 				
 			}
-
-			// } else if (name === "card-open-project") {
-			// 	document.querySelector(DOM.projectContent).style.display = "block";
-			// }
 
 		});
 		// Listening on project task button
@@ -405,15 +351,7 @@ var appController = (function(cardCtrl, UICtrl) {
 		UICtrl.addProjectTaskSection(newProject);
 		UICtrl.clearProjectTask();
 
-		cardCtrl.resetProjectScore();
-
 	};
-
-	//find the last project id
-	// var thisProjectID = function() {
-	// 	var li_element = document.getElementsByTagName('li');
-	// 	return (li_element[li_element.length - 1].id);
-	// }
 
 	// Get project ID
 
@@ -426,17 +364,9 @@ var appController = (function(cardCtrl, UICtrl) {
 	var updateScore = function(projectID) {
 		
 	    var project = cardCtrl.getProject(projectID);
-	    // var score = project.current_score;
-	    // var score = cardCtrl.getProject(projectID)
-	    // console.log(project);
 
 	    UICtrl.displayCurrentScore(project);
   	};
-
-  	// var updateProject = function(projectID) {
-  	// 	var project = cardCtrl.getProject(projectID);
-  	// 	project.current_score = cardCtrl.getProjectScore().currentScore;
-  	// }
 
   	var controlAddTask = function() {
 	    var input, newTask, projectID;
@@ -448,11 +378,7 @@ var appController = (function(cardCtrl, UICtrl) {
 	      	newTask = cardCtrl.addTask(projectID,input.task,input.score);
 	      	UICtrl.addTaskItem(newTask);
 	      	updateScore(projectID);
-	      	// updateProject(projectID);
 	      	UICtrl.clearField();
-
-	      	// cardCtrl.addTaskToProject(projectID, newTask);
-	     // }
 	 	}
 
   	};
@@ -466,70 +392,3 @@ var appController = (function(cardCtrl, UICtrl) {
 })(cardController,UIController);
 
 appController.init();
-
-
-
-
-
-
-
-
-
-
-// var addProject = function(name,targetScore) {
-// 	var ID, project;
-// 	if (allData.length > 0) {
-// 		ID = allData[allData.length - 1].project_id + 1;
-// 	} else {
-// 		ID = 0;
-// 	}
-
-// 	project = new CreateProject(ID, name, targetScore);
-// 	allData.push(project);
-// 	return project;
-// }; 
-
-// var addTask = function(task, score) {
-// 	var ID, newProjectTask;
-
-// 	if (projectData.taskDetail.length > 0) {
-// 		ID = projectData.taskDetail[projectData.taskDetail.length - 1].task_id + 1;
-// 	} else {
-// 		ID = 0;
-// 	}
-
-// 	newProjectTask = new ProjectTask(ID, task, score);
-// 	projectData.taskDetail.push(newProjectTask);
-// 	return newProjectTask;
-
-// }
-
-// var addTaskToProject = function(projectID,task) {
-// 	var projectIndex = allData.map(function(element) {
-// 		return element.project_id;
-// 	}).indexOf(projectID);
-
-// 	allData[projectIndex].addProjectTask();
-// 	// allData[projectIndex].projectTask.push(task);
-// };
-
-
-// var newProject = addProject("Portfolio Website", 100);
-// addProject("eCommerce for Heart foundation", 200);
-// addProject("Friends iOS app about his life", 70);
-
-// newProject.addProjectTask();
-// allData[0].projectTask.push({task_id: 1, task: "Hello world", score: 2});
-
-// var newTask = addTask("added new item", 2);
-// var newTask1 = addTask("changed information", 1);
-// allData.projectTask.push(newTask);
-// addTaskToProject(0);
-// addTaskToProject(0,newTask1);
-// addTaskToProject(0,newTask);
-// allData[0].projectTask.push(newTask);
-// allData[0].projectTask.push(newTask1);
-// console.log(newTask)
-// console.log(projectData);
-// console.log(allData);
-// console.log(allData[0].projectTask[1]);
